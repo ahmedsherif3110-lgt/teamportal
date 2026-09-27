@@ -1,0 +1,19 @@
+{
+  "project_info": {
+    "project_number": "569191612562",
+    "project_id": "team-portal2027",
+    "storage_bucket": "team-portal2027.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "PUT_YOUR_ANDROID_APP_ID_HERE",
+        "android_client_info": { "package_name": "com.teamportal.app" }
+      },
+      "oauth_client": [],
+      "api_key": [{ "current_key": "AIzaSyCaoVVdh18Z2nmVuzVtdgb4_2gKukXS7Hs" }],
+      "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+    }
+  ],
+  "configuration_version": "1"
+}

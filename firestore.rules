@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function leader() { return signedIn() && me().role == 'leader' && me().active == true; }
+    function sameTeam(teamId) { return signedIn() && me().teamId == teamId; }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || leader());
+      allow create: if leader();
+      allow update: if leader() || (signedIn() && request.auth.uid == uid && request.resource.data.role == resource.data.role && request.resource.data.teamId == resource.data.teamId);
+      allow delete: if leader();
+    }
+
+    match /members/{memberId} {
+      allow read: if leader();
+      allow create, update: if leader() && request.resource.data.teamId == me().teamId;
+      allow delete: if leader() && resource.data.teamId == me().teamId;
+    }
+
+    match /requests/{requestId} {
+      // الموظف يرى العمليات العامة لكل الفريق، ويرى طلباته الخاصة فقط.
+      // طلب خاص = visibility private، طلب لجميع الموظفين وباقي العمليات = visibility all.
+      allow read: if leader() || (signedIn() && resource.data.teamId == me().teamId && (resource.data.visibility == "all" || resource.data.requesterId == request.auth.uid));
+      allow create: if signedIn()
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.teamId == me().teamId
+        && me().active == true;
+      allow update: if leader() && resource.data.teamId == me().teamId;
+      allow delete: if leader() && resource.data.teamId == me().teamId;
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if signedIn() && sameTeam(resource.data.teamId);
+      allow create: if leader() && request.resource.data.teamId == me().teamId;
+      allow update: if signedIn() && sameTeam(resource.data.teamId);
+      allow delete: if leader() || (signedIn() && sameTeam(resource.data.teamId));
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if leader() || (signedIn() && sameTeam(resource.data.teamId) && (resource.data.audience == "all" || resource.data.audience == "employees" || (resource.data.audience == "targeted" && request.auth.uid in resource.data.targetUserIds)));
+      allow create: if signedIn() && request.resource.data.teamId == me().teamId;
+      allow update: if signedIn() && sameTeam(resource.data.teamId);
+      allow delete: if leader() && resource.data.teamId == me().teamId;
+    }
+
+    match /notificationTokens/{tokenId} {
+      allow read: if leader() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid && request.resource.data.teamId == me().teamId;
+      allow delete: if signedIn() && (request.auth.uid == resource.data.uid || leader());
+    }
+
+    match /inventory/{itemId} {
+      allow read: if signedIn() && sameTeam(resource.data.teamId);
+      allow create, update: if leader() && request.resource.data.teamId == me().teamId;
+      allow delete: if leader() && resource.data.teamId == me().teamId;
+    }
+
+    match /teamConfigs/{teamId} {
+      allow read: if signedIn() && sameTeam(teamId);
+      allow create, update: if leader() && teamId == me().teamId && request.resource.data.teamId == me().teamId;
+      allow delete: if leader() && teamId == me().teamId;
+    }
+
+    match /accessRequests/{requestId} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow read: if leader();
+      allow update: if leader();
+      allow delete: if leader();
+    }
+  }
+}
