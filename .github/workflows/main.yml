@@ -25,9 +25,23 @@ jobs:
           mkdir -p android/app/src/main/res/drawable
 
           cat > android/settings.gradle <<'EOF'
-          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
-          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
-          rootProject.name='TeamPortal'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          rootProject.name = 'TeamPortal'
           include ':app'
           EOF
 
@@ -69,7 +83,7 @@ jobs:
           }
           EOF
 
-          cp google-services.json android/app/google-services.json
+          cp android/app/google-services.json android/app/google-services.json
           cp AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           cp MainActivity.java android/app/src/main/java/com/teamportal/app/MainActivity.java
           cp TeamFirebaseMessagingService.java android/app/src/main/java/com/teamportal/app/TeamFirebaseMessagingService.java
