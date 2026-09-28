@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "569191612562",
+    "project_id": "team-portal2027",
+    "storage_bucket": "team-portal2027.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569191612562:android:ae3b0b5e63b1e47040e64b",
+        "android_client_info": {
+          "package_name": "com.teamportal.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjd5UgcEzeqDNnJ1HEwk4Gpg54mYf6IIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569191612562:android:de1b004564c8f43e40e64b",
+        "android_client_info": {
+          "package_name": "com.teamportal.selfservice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjd5UgcEzeqDNnJ1HEwk4Gpg54mYf6IIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
